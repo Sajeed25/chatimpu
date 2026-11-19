@@ -186,7 +186,7 @@ The code is complete and tested against the documented RazorpayX Payouts API and
 ### Deploy
 
 ```bash
-cd chatimpu
+cd chatimpu                                    # your clone of this repository
 supabase secrets set PAYOUT_ENCRYPTION_KEY="$(openssl rand -base64 32)" PAYOUT_PROVIDER=mock CRON_SECRET="$(openssl rand -hex 24)"
 supabase functions deploy payout-methods
 supabase functions deploy payouts
@@ -263,7 +263,7 @@ The `notifications` table holds in-app notifications in Telugu and English, show
 
 ```bash
 # Backend integration tests (RLS, workflow, ledger, withdrawals, payouts incl. webhook & concurrency)
-cd chatimpu/supabase/tests && npm install
+cd supabase/tests && npm install
 SUPABASE_URL=… SUPABASE_ANON_KEY=… SUPABASE_SERVICE_ROLE_KEY=… npm test     # 25 tests
 npm run typecheck
 

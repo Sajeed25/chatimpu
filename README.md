@@ -90,7 +90,7 @@ AI buttons use a clearly-labelled offline fallback until the backend is connecte
 
 ```bash
 npm i -g supabase
-cd chatimpu
+cd chatimpu                                    # your clone of this repository
 supabase init                                 # once; keeps ./supabase as-is
 supabase start                                # local stack (Docker) — or link a cloud project:
 # supabase link --project-ref <ref>

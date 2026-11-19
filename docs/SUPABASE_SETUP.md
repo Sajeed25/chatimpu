@@ -30,33 +30,33 @@ Also note the **project ref** — the `xxxx` part of the URL.
 Open **SQL Editor → New query**. Run these ten files **in this order**: open each file from the
 repo, paste the whole contents, click **Run**, wait for "Success", then do the next.
 
-1. `chatimpu/supabase/migrations/0001_schema.sql` — tables (turns on PostGIS and pg_trgm)
-2. `chatimpu/supabase/migrations/0002_rls.sql` — security rules + the `media` storage bucket
-3. `chatimpu/supabase/migrations/0003_api.sql` — feed, polls, voting, moderation, analytics
-4. `chatimpu/supabase/migrations/0004_cms.sql` — what the newsroom CMS needs (staff views, settings, poll fixes)
-5. `chatimpu/supabase/migrations/0005_reporters.sql` — reporter ecosystem: contributor onboarding, editorial workflow,
+1. `supabase/migrations/0001_schema.sql` — tables (turns on PostGIS and pg_trgm)
+2. `supabase/migrations/0002_rls.sql` — security rules + the `media` storage bucket
+3. `supabase/migrations/0003_api.sql` — feed, polls, voting, moderation, analytics
+4. `supabase/migrations/0004_cms.sql` — what the newsroom CMS needs (staff views, settings, poll fixes)
+5. `supabase/migrations/0005_reporters.sql` — reporter ecosystem: contributor onboarding, editorial workflow,
    earnings ledger, withdrawals and payouts, assignments, badges, notifications, private `submissions` and
    `reporter-private` storage buckets (see [REPORTER_ECOSYSTEM.md](REPORTER_ECOSYSTEM.md)). Safe to run again.
-6. `chatimpu/supabase/migrations/0006_jobs.sql` — scheduled jobs: push delivery for account notifications, the
+6. `supabase/migrations/0006_jobs.sql` — scheduled jobs: push delivery for account notifications, the
    data-retention sweep, and device-token linking. Safe to run again.
-7. `chatimpu/supabase/migrations/0007_tax.sql` — PAN, TDS on contributor payouts (off until you switch it on) and
+7. `supabase/migrations/0007_tax.sql` — PAN, TDS on contributor payouts (off until you switch it on) and
    tax / payout reports (see [REPORTER_ECOSYSTEM.md](REPORTER_ECOSYSTEM.md) §14). Safe to run again.
-8. `chatimpu/supabase/migrations/0008_content.sql` — duplicate-report auto-reject, News Reels, daily WhatsApp
+8. `supabase/migrations/0008_content.sql` — duplicate-report auto-reject, News Reels, daily WhatsApp
    status cards and the automated twice-daily news intake. Safe to run again.
-9. `chatimpu/supabase/migrations/0009_community.sql` — help centre FAQs, the Reporter Academy, readers' story
+9. `supabase/migrations/0009_community.sql` — help centre FAQs, the Reporter Academy, readers' story
    reports and corrections, grievances (24 h / 15 day deadlines), helplines, daily prices and the community
    board. Safe to run again.
-10. `chatimpu/supabase/seed.sql` — the 24 sample stories, districts, polls, alerts, ads, videos
+10. `supabase/seed.sql` — the 24 sample stories, districts, polls, alerts, ads, videos
 
 > **Run each file in its own query, and only once.** Click **+ New query** for every file — don't paste
 > several files into one query, and don't press Run twice. A file that has already run fails the second time
 > with an error like `type "role_kind" already exists`. That error is harmless (nothing is changed when a
 > query fails), it just means that file is already done.
 >
-> **Not sure what's done?** Run `chatimpu/supabase/check_setup.sql` — it lists each file as ✅ done or ❌ not
+> **Not sure what's done?** Run `supabase/check_setup.sql` — it lists each file as ✅ done or ❌ not
 > yet, and changes nothing. Then run only the ❌ files, in order.
 >
-> **Want a clean start?** On a new project only, run `chatimpu/supabase/reset.sql` (it deletes every Chatimpu
+> **Want a clean start?** On a new project only, run `supabase/reset.sql` (it deletes every Chatimpu
 > table and the sample data), then run the ten files again from the top.
 
 Check it worked: **Table Editor → stories** should show 24 rows. Then in SQL Editor run:
@@ -65,7 +65,7 @@ Check it worked: **Table Editor → stories** should show 24 rows. Then in SQL E
 select jsonb_array_length(get_feed('te', 'hyd', 'hyd-amp'));   -- expect a number > 0 (0 means seed.sql hasn't run yet)
 ```
 
-> Prefer the command line? Instead of step 3: `npm i -g supabase`, then from `chatimpu/`:
+> Prefer the command line? Instead of step 3: `npm i -g supabase`, then from the repository root:
 > `supabase init`, `supabase link --project-ref <ref>`, `supabase db push`, and run `seed.sql` in the SQL editor.
 
 ## 4. Phone OTP login (dashboard → Authentication)
@@ -155,7 +155,7 @@ lawyer confirm the periods (DPDP Act 2023, Income-tax record-keeping).
 
 ```bash
 npm i -g supabase
-cd chatimpu
+cd chatimpu                                    # your clone of this repository
 supabase login
 supabase init                                  # once; answer "N" to the VS Code / Deno prompts
 supabase link --project-ref <your-project-ref>
@@ -207,7 +207,7 @@ full `https://` image URLs on stories (they are used as-is).
 
 The app reads its keys **when it is built**, so the APK must be rebuilt after this step.
 
-1. Create `chatimpu/app/.env` (it is git-ignored):
+1. Create `app/.env` (it is git-ignored):
 
 ```
 EXPO_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
@@ -217,7 +217,7 @@ EXPO_PUBLIC_SUPABASE_ANON_KEY=<anon / publishable key>
 2. Rebuild:
 
 ```bash
-cd chatimpu/app
+cd app
 npx expo prebuild --platform android
 cd android && ./gradlew assembleRelease
 # APK: app/build/outputs/apk/release/app-release.apk
@@ -230,7 +230,7 @@ The demo OTP `123456` stops working once keys are set — use a test number from
 
 ## 10. Push notifications (Expo + Firebase)
 
-1. `cd chatimpu/app && npx eas-cli init` — links an Expo project (adds its `projectId` to `app.json`).
+1. `cd app && npx eas-cli init` — links an Expo project (adds its `projectId` to `app.json`).
 2. In the Firebase console, create a project, add an Android app with package `in.chatimpu.app`,
    then **Project settings → Service accounts → Generate new private key**.
 3. `npx eas-cli credentials` → Android → **Google Service Account Key for FCM V1** → upload that JSON.
@@ -239,14 +239,14 @@ The demo OTP `123456` stops working once keys are set — use a test number from
 
 ## 11. CMS (newsroom dashboard)
 
-1. Create `chatimpu/admin/.env`:
+1. Create `admin/.env`:
 
 ```
 VITE_SUPABASE_URL=https://<ref>.supabase.co
 VITE_SUPABASE_ANON_KEY=<anon / publishable key>
 ```
 
-2. Run it: `cd chatimpu/admin && npm install && npm run dev` (or `npm run build` and host the `dist/` folder
+2. Run it: `cd admin && npm install && npm run dev` (or `npm run build` and host the `dist/` folder
    on Vercel / Netlify / Cloudflare Pages — set the same two variables there).
 3. **Authentication → URL Configuration:** set **Site URL** to the CMS address (needed for password-reset emails).
 4. Open the CMS and sign in with **Phone OTP** or **Email**. You land on the dashboard with a green
