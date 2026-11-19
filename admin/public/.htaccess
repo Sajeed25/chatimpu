@@ -1,0 +1,30 @@
+# Chatimpu newsroom CMS + reporter portal on Hostinger (LiteSpeed / Apache).
+# Copied into dist/ by `npm run build`; upload it with the rest of dist/.
+
+Options -Indexes
+RewriteEngine On
+
+# Always use HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Single-page app: /reporter/help, /editorial, … are routes inside index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  # The page itself must never be cached, or staff keep an old version after you upload a new build
+  <FilesMatch "^index\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Built files have a content hash in their name, so they can be cached for a year
+  <FilesMatch "\.(js|css|woff2?|ttf|png|jpg|svg|webp)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
