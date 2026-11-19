@@ -6,10 +6,11 @@
 |---|---|---|
 | Database, logins, file storage, server functions, scheduled jobs | **Supabase** | Hostinger can't run Postgres, Supabase Auth or Edge Functions. Set it up with [SUPABASE_SETUP.md](SUPABASE_SETUP.md). |
 | Newsroom CMS and reporter web portal (`admin/`) | **Hostinger** | A static website (HTML, JS, CSS). Any Hostinger plan with a domain can host it. |
+| Public website `www.chatimpu.com` (`website/`) | **Hostinger** | Landing page, shared story links, complaints form, privacy and terms. PHP, no build step: see [website/README.md](../website/README.md). |
 | Mobile app (`app/`) | APK / Google Play | Built on your computer or with EAS. |
 
 Suggested address: **`https://newsroom.chatimpu.com`** for the CMS, so the reporter portal is
-`https://newsroom.chatimpu.com/reporter`. Keep `www.chatimpu.com` for a public website.
+`https://newsroom.chatimpu.com/reporter`. The public website `website/` goes on `www.chatimpu.com`.
 
 ---
 
@@ -117,6 +118,5 @@ Database changes are separate: run any new `supabase/migrations/00xx_*.sql` file
 
 ## Not covered yet
 
-- **Shared story links:** shared stories and reels link to `https://www.chatimpu.com/s/<id>`, but no public web page
-  shows them yet. Until one is built, put a simple landing page on `www.chatimpu.com` with a Play Store link, and send `/s/*` there.
+- **Shared story links** (`https://www.chatimpu.com/s/<id>`) are handled by the public website in `website/`.
 - **Automatic deploys:** each update is a manual upload. A GitHub Action can upload `admin/dist` over FTP on every push to `main`, using your Hostinger FTP details stored as GitHub secrets.
