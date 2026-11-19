@@ -125,11 +125,11 @@ function page_start(array $meta = []): void {
 <meta name="theme-color" content="#ED1C24">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<link rel="preload" href="/assets/fonts/RamabhadraChatimpu-Bold.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="/assets/fonts/Ramabhadra-Regular.ttf" as="font" type="font/ttf" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Telugu:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/site.css?v=1">
+<link rel="stylesheet" href="/assets/site.css?v=2">
 <script>try{var l=localStorage.getItem('ck-lang');if(l==='en'||l==='te'){document.documentElement.dataset.lang=l;document.documentElement.lang=l}}catch(e){}</script>
 </head>
 <body>

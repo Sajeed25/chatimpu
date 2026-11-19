@@ -22,15 +22,16 @@ designed for news and screen reading:
 
 | Role | Font | Why |
 |---|---|---|
-| Headlines, wordmark | **Ramabhadra Bold** | Ramabhadra is the popular Telugu headline face; it ships in one weight, so we build a real bold cut from it (`tools/make_ramabhadra_bold.py`, FreeType outline emboldening; OFL) — iOS does not fake bold for custom fonts |
+| Headlines, wordmark | **Ramabhadra** (original weight) | The popular Telugu headline face (OFL). It has one weight and is used unbolded: thickening it, in a font file or by the browser, closes the loops of letters such as ఆ, రె and ంపు. Headlines stand out by size (25 sp on news cards) and solid black, not weight. |
 | Story text | **Ramabhadra** (regular) | Same family as the headlines at normal weight, so cards read as one voice |
 | Buttons, labels, tabs | **Hind Guntur** (500/600) | Indian Type Foundry UI family with real weights, so small Telugu UI text stays crisp |
 
-Each Telugu role gets its own size and line-height correction (`app/src/theme/fonts.ts`): Ramabhadra is a
-wide face with tall stacks (natural line height 1.9× its size), so headlines are set ~12% smaller and story
-text ~8% smaller with ~1.8× leading; the feed card gives Indic summaries a little more room (photo 33% of the
-screen instead of 40%) so a full summary fits. English uses Playfair Display + Inter. The CMS and reporter
-portal use the same faces (the bold cut is served as Ramabhadra weight 700).
+Each Telugu role gets its own size and line-height correction (`app/src/theme/fonts.ts`). Telugu letters
+sit small inside their line, so Telugu is set a step larger than English, for older readers and low vision.
+On news cards headlines are 25 sp in solid black and the 60-word text is 19 sp with ~1.75× line spacing
+(English: 25 / 18 sp). The photo keeps at least 32% of the screen; a longer summary gets "Read full story".
+English uses Playfair Display + Inter. The CMS, reporter portal and website use the same faces and switch
+off browser fake-bold (`font-synthesis`).
 
 <p>
 <img src="docs/screenshots/feed-en.jpg" width="200" alt="Flip feed, light theme">
@@ -41,7 +42,7 @@ portal use the same faces (the bold cut is served as Ramabhadra weight 700).
 <p>
 <img src="docs/screenshots/local-en.jpg" width="200" alt="Local, Telugu">
 <img src="docs/screenshots/profile-amoled.jpg" width="200" alt="Profile, AMOLED theme">
-<img src="docs/screenshots/story-te.jpg" width="200" alt="Telugu story: Ramabhadra Bold headline + Ramabhadra story text">
+<img src="docs/screenshots/story-te.jpg" width="200" alt="Telugu story: Ramabhadra headline + Ramabhadra story text">
 <img src="docs/screenshots/splash.jpg" width="200" alt="Splash">
 </p>
 <img src="docs/screenshots/cms-dash.jpg" width="820" alt="Newsroom CMS dashboard">
@@ -121,7 +122,7 @@ Other one-time setup:
 | Area | Where |
 |---|---|
 | Design system — tokens, light / night / AMOLED themes, WCAG AA notes | `app/src/theme/` |
-| Per-language fonts (Playfair + Inter; Telugu: Ramabhadra Bold headlines + Ramabhadra story text + Hind Guntur labels; Noto Serif Devanagari headlines; Noto Sans for other scripts), lazily loaded | `app/src/theme/fonts.ts` |
+| Per-language fonts (Playfair + Inter; Telugu: Ramabhadra headlines (unbolded) + Ramabhadra story text + Hind Guntur labels; Noto Serif Devanagari headlines; Noto Sans for other scripts), lazily loaded | `app/src/theme/fonts.ts` |
 | 9-language UI (en, te, hi fully; ta, kn, ml, mr, bn, gu core UI with English fallback) | `app/src/i18n/` |
 | 3D flip feed (Flipboard-style split-page fold, flicker-free, haptic on flip, a11y next/prev actions) | `app/src/components/feed/FlipFeed.tsx` |
 | Story card, reactions 👍 😮 😢 😡, Listen (TTS), bookmark, WhatsApp share | `components/feed/StoryCard.tsx` |

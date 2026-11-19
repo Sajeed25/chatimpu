@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Txt } from '@/components/ui';
 import { Emblem } from '@/components/Brand';
 import { palette } from '@/theme';
-import { TE_BOLD } from '@/theme/fonts';
+import { TE_HEAD } from '@/theme/fonts';
 import { APP } from '@/config';
 import { STATUS_BACKGROUNDS, STATUS_KIND_LABEL, type StatusCard } from '@/data/status';
 
@@ -24,15 +24,15 @@ export const StatusCardView = forwardRef<ComponentRef<typeof View>, { card: Stat
       <View style={{ position: 'absolute', top: 22 * s, left: 0, right: 0, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 * s, backgroundColor: 'rgba(255,255,255,0.92)', paddingHorizontal: 10 * s, paddingVertical: 4 * s, borderRadius: 20 * s }}>
           <Emblem size={22 * s} />
-          <Txt lang="en" style={{ fontFamily: TE_BOLD, fontSize: 15 * s, lineHeight: 26 * s, color: palette.navy }}>{APP.nameTe}</Txt>
+          <Txt lang="en" style={{ fontFamily: TE_HEAD, fontSize: 15 * s, lineHeight: 26 * s, color: palette.navy }}>{APP.nameTe}</Txt>
         </View>
       </View>
       {card.kind !== 'meme' || !card.image ? (
         <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 28 * s }}>
-          <Txt lang="en" style={{ alignSelf: 'center', fontSize: 12 * s, lineHeight: 18 * s, color: 'rgba(255,255,255,0.85)', fontFamily: te ? TE_BOLD : 'Inter_700Bold', letterSpacing: te ? 0 : 2 * s, marginBottom: 14 * s }}>
+          <Txt lang="en" style={{ alignSelf: 'center', fontSize: 12 * s, lineHeight: 18 * s, color: 'rgba(255,255,255,0.85)', fontFamily: te ? TE_HEAD : 'Inter_700Bold', letterSpacing: te ? 0 : 2 * s, marginBottom: 14 * s }}>
             {(te ? STATUS_KIND_LABEL[card.kind].te : STATUS_KIND_LABEL[card.kind].en.toUpperCase())}
           </Txt>
-          <Txt lang={card.lang} align="center" style={{ fontFamily: te ? TE_BOLD : 'PlayfairDisplay_700Bold', fontSize: (long ? 22 : 28) * s, lineHeight: (long ? (te ? 40 : 32) : (te ? 50 : 38)) * s, color: palette.white, textShadowColor: 'rgba(0,0,0,0.35)', textShadowRadius: 6 }}>
+          <Txt lang={card.lang} align="center" style={{ fontFamily: te ? TE_HEAD : 'PlayfairDisplay_700Bold', fontSize: (long ? 22 : 28) * s, lineHeight: (long ? (te ? 40 : 32) : (te ? 50 : 38)) * s, color: palette.white, textShadowColor: 'rgba(0,0,0,0.35)', textShadowRadius: 6 }}>
             {card.text}
           </Txt>
           {card.attribution && <Txt lang={card.lang} align="center" style={{ marginTop: 16 * s, fontSize: 14 * s, lineHeight: 24 * s, color: 'rgba(255,255,255,0.85)' }}>— {card.attribution}</Txt>}

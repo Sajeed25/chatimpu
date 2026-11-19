@@ -68,10 +68,10 @@ export default function StoryDetail() {
             <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: categoryColors[story.category] }} />
             <Txt v="overline" color={t.colors.accentText}>{tr(`cat_${story.category}`)} · {placeName(lang, mandalById(story.mandalId))}, {placeName(lang, districtById(story.districtId))}</Txt>
           </View>
-          <Txt v="h1" lang={txt.lang}>{txt.headline}</Txt>
+          <Txt v="h1" lang={txt.lang} style={{ fontSize: txt.lang === 'en' ? 30 : 30, lineHeight: txt.lang === 'en' ? 37 : 48, color: t.dark ? '#FFFFFF' : '#000000' }}>{txt.headline}</Txt>
           <Txt v="caption" muted>{story.sponsor ? `${tr('sponsored')} · ${story.sponsor}` : story.source} · {timeAgo(story.publishedAt, tr)}{story.reporter ? ` · ${story.reporter.name}` : ''}</Txt>
           <View style={{ width: 40, height: 2, backgroundColor: t.colors.accent }} />
-          <Txt v="body" lang={txt.lang} style={{ fontSize: txt.lang === 'en' ? 18 : 17, lineHeight: txt.lang === 'en' ? 29 : 36 }}>{txt.summary}</Txt>
+          <Txt v="body" lang={txt.lang} style={{ fontSize: txt.lang === 'en' ? 19 : 20, lineHeight: txt.lang === 'en' ? 31 : 36, color: t.dark ? '#E6E6E6' : '#1A1A1A' }}>{txt.summary}</Txt>
           {other && (
             <View style={{ padding: 14, borderRadius: radius.md, backgroundColor: t.colors.surfaceAlt, gap: 6 }}>
               <Txt v="overline" muted>{txt.lang === 'en' ? 'తెలుగులో' : 'In English'}</Txt>

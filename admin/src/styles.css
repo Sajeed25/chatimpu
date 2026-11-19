@@ -1,6 +1,5 @@
-/* Ramabhadra ships in one weight; this is its emboldened cut (SIL OFL, see /fonts/OFL-Ramabhadra.txt),
-   registered as weight 700 so Telugu headlines and the wordmark get real bold glyphs, not synthetic bold. */
-@font-face { font-family: 'Ramabhadra'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/RamabhadraChatimpu-Bold.ttf') format('truetype'); }
+/* Ramabhadra has one weight; never thicken or fake-bold it (it closes the loops of ఆ, రె, ంపు). */
+@font-face { font-family: 'Ramabhadra'; font-weight: 400; font-style: normal; font-display: swap; src: url('/fonts/Ramabhadra-Regular.ttf') format('truetype'); }
 /* Chatimpu newsroom — red · white · black */
 :root {
   --ink: #0A0A0A; --white: #FFFFFF; --red: #D7141A; --red-deep: #B00E13; --red-bright: #FF4D52; --green: #1F8A55;
@@ -121,9 +120,10 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.6; }
 .phone .img .chips .spn { background: #fff; color: var(--red); }
 .phone .body { margin-top: -18px; background: var(--white); border-radius: 18px 18px 0 0; padding: 16px 18px; position: relative; flex: 1; overflow: hidden; }
 .phone .meta { font-size: 10px; font-weight: 700; letter-spacing: .1em; color: var(--red); text-transform: uppercase; margin-bottom: 6px; }
-.phone h4 { font: 700 18px/1.25 var(--serif); margin: 0; }
+.phone h4 { font: 700 19.5px/1.3 var(--serif); color: #000; margin: 0; }
+.phone h4:lang(te), .phone h4.te-head { font-weight: 400; line-height: 1.6; }
 .phone .rule { width: 28px; height: 2px; background: var(--red); margin: 10px 0; }
-.phone p { font-size: 12.5px; line-height: 1.6; color: #262626; margin: 0; }
+.phone p { font-size: 14.5px; line-height: 1.75; color: #1A1A1A; margin: 0; }
 .phone .actions { display: flex; gap: 8px; padding: 10px 18px 16px; background: var(--white); }
 .phone .actions span { font-size: 11px; font-weight: 600; border: 1px solid var(--red); color: var(--red); border-radius: 99px; padding: 4px 10px; }
 
@@ -148,9 +148,9 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.6; }
   .table-wrap { overflow-x: auto; }
 }
 
-/* Telugu typography (matches the app): Ramabhadra Bold headlines + wordmark, Ramabhadra Regular story text */
-:lang(te) h4, .te-head { font-family: var(--te-head); font-weight: 700; line-height: 1.5; }
-.te-body { font-family: var(--te-body); font-weight: 400; line-height: 1.8; }
+/* Telugu typography (matches the app): Ramabhadra at its one original weight for headlines, wordmark and story text */
+:lang(te) h4, .te-head { font-family: var(--te-head); font-weight: 400; font-synthesis: none; line-height: 1.6; }
+.te-body { font-family: var(--te-body); font-weight: 400; font-synthesis: none; line-height: 1.8; }
 
 /* sign-in */
 .auth-shell { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: radial-gradient(circle at 20% 0%, rgba(215,20,26,.10), transparent 45%), var(--bg); }
@@ -195,3 +195,6 @@ textarea.input { resize: vertical; min-height: 120px; line-height: 1.6; }
 .filters .input { width: auto; min-width: 140px; }
 .desk > .card:first-child { max-height: calc(100vh - 210px); overflow: auto; position: sticky; top: 16px; }
 @media (max-width: 1100px) { .desk > .card:first-child { max-height: 50vh; position: static; } }
+
+/* Never fake-bold a single-weight font (Telugu letters merge when browsers thicken Ramabhadra). */
+html { font-synthesis-weight: none; }

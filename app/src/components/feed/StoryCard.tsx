@@ -37,20 +37,29 @@ export function StoryCard({ story, width, height, topInset, bottomInset, speakin
    * content needs and the photo fills the rest. The photo never shrinks below MIN_IMG of the screen;
    * if a summary is longer than the room left, it is clipped and "Read full story" opens the article.
    */
-  const MIN_IMG = 0.34;
+  const MIN_IMG = height < 780 ? 0.26 : 0.32;   // small phones: a little less photo so more of the larger text fits
   const minImg = Math.round(height * MIN_IMG);
-  const lineH = Math.round(25 * t.lh(txt.lang));
+  /*
+   * Reading sizes for the card (large-print friendly; Telugu letters sit small in the line, so Telugu
+   * is set a step larger than English). Headline: one solid colour, regular weight, never synthetic bold.
+   */
+  const te = txt.lang !== 'en';
+  const headStyle = { fontSize: te ? 25 : 25, lineHeight: te ? 40 : 31, color: t.dark ? '#FFFFFF' : '#000000' };
+  const bodyStyle = { fontSize: te ? 19 : 18, lineHeight: te ? 33 : 28, color: t.dark ? '#E6E6E6' : '#1A1A1A' };
+  const lineH = bodyStyle.lineHeight;
   const [fullH, setFullH] = useState(0);        // natural height of the whole summary
-  const [chromeH, setChromeH] = useState(0);    // text panel height minus the summary
   const [shownH, setShownH] = useState(0);      // summary height as currently rendered
-  const [panelH, setPanelH] = useState(0);
+  const [panelH, setPanelH] = useState(0);      // whole text panel as currently rendered
+  // Everything in the panel except the summary (meta, headline, actions…). Derived from the latest pair of
+  // measurements so it can't go stale when fonts load or the text size changes.
+  const chromeH = panelH && shownH ? panelH - shownH : 0;
   const room = height + 24 - minImg - chromeH;  // panel overlaps the photo by 24
   const maxLines = chromeH ? Math.max(3, Math.floor(room / lineH)) : 8;
   const fullLines = fullH ? Math.max(1, Math.round(fullH / lineH)) : maxLines;
   const lines = Math.min(fullLines, maxLines);
   const truncated = fullH > 0 && fullLines > maxLines;
-  const measurePanel = (h: number) => { setPanelH(h); if (shownH) setChromeH(h - shownH); };
-  const measureShown = (h: number) => { setShownH(h); if (panelH) setChromeH(panelH - h); };
+  const measurePanel = (h: number) => setPanelH(h);
+  const measureShown = (h: number) => setShownH(h);
   const place = placeName(lang, villageById(story.villageId ?? '') ?? mandalById(story.mandalId)) + ', ' + placeName(lang, districtById(story.districtId));
   const catColor = categoryColors[story.category];
 
@@ -91,7 +100,7 @@ export function StoryCard({ story, width, height, topInset, bottomInset, speakin
         style={{ marginTop: -24, borderTopLeftRadius: radius.lg, borderTopRightRadius: radius.lg, backgroundColor: t.colors.bg, paddingHorizontal: 22, paddingTop: 20, paddingBottom: bottomInset + 10 }}>
         {/* invisible copy of the full summary, used only to measure how many lines it needs */}
         <View pointerEvents="none" accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ position: 'absolute', left: 22, right: 22, top: 0, opacity: 0 }}>
-          <Txt v="body" lang={txt.lang} onLayout={(e) => setFullH(e.nativeEvent.layout.height)}>{txt.summary}</Txt>
+          <Txt v="body" lang={txt.lang} style={bodyStyle} onLayout={(e) => setFullH(e.nativeEvent.layout.height)}>{txt.summary}</Txt>
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 10 }}>
           <Txt v="overline" color={t.colors.accentText} numberOfLines={1} style={{ flexShrink: 2 }}>{story.sponsor ?? story.source}</Txt>
@@ -100,9 +109,9 @@ export function StoryCard({ story, width, height, topInset, bottomInset, speakin
           <Txt v="caption" muted numberOfLines={1} style={{ flexShrink: 0 }}>· {timeAgo(story.publishedAt, tr)}</Txt>
         </View>
 
-        <Txt v="h2" lang={txt.lang} numberOfLines={3}>{txt.headline}</Txt>
+        <Txt v="h2" lang={txt.lang} numberOfLines={3} style={headStyle}>{txt.headline}</Txt>
         <View style={{ width: 36, height: 2, backgroundColor: t.colors.accent, marginVertical: 12, borderRadius: 1 }} />
-        <Txt v="body" lang={txt.lang} numberOfLines={lines} onLayout={(e) => measureShown(e.nativeEvent.layout.height)} style={{ color: t.dark ? '#DADADA' : '#262626' }}>{txt.summary}</Txt>
+        <Txt v="body" lang={txt.lang} numberOfLines={lines} onLayout={(e) => measureShown(e.nativeEvent.layout.height)} style={bodyStyle}>{txt.summary}</Txt>
         {truncated && (
           <Tap onPress={() => router.push(`/story/${story.id}`)} accessibilityRole="link" style={{ alignSelf: 'flex-start', paddingVertical: 4 }}>
             <Txt v="label" color={t.colors.accentText}>{tr('readFull')} →</Txt>

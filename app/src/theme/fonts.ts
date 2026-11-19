@@ -1,7 +1,8 @@
 /**
  * Per-language font pairing. Latin uses Playfair Display (serif headlines) + Inter (body).
- * Telugu uses Ramabhadra throughout: a bold cut for headlines and the wordmark, regular for story text,
- * plus Hind Guntur for small UI labels (see README → Typography). Devanagari gets a serif
+ * Telugu uses Ramabhadra (its one, original weight) for headlines, the wordmark and story text, plus Hind
+ * Guntur for small UI labels (see README → Typography). We never thicken Ramabhadra: an emboldened copy closes
+ * the loops of letters such as ఆ, రె and ంపు and makes vowel signs touch. Devanagari gets a serif
  * headline face; other Indic scripts use matching Noto families.
  * Fonts are loaded lazily per language (see useLanguageFonts) to keep startup fast.
  */
@@ -25,11 +26,10 @@ export const latinFonts = {
   Inter_700Bold: require('@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf'),
   // brand wordmark చాటింపు — loaded at startup in every language
   Ramabhadra_400Regular: require('@expo-google-fonts/ramabhadra/400Regular/Ramabhadra_400Regular.ttf'),
-  RamabhadraChatimpu_700Bold: require('../../assets/fonts/RamabhadraChatimpu-Bold.ttf'),
 };
 
-/** Telugu bold display face (Ramabhadra emboldened, SIL OFL — see tools/make_ramabhadra_bold.py). */
-export const TE_BOLD = 'RamabhadraChatimpu_700Bold';
+/** Telugu display face for headlines, the wordmark and status cards: original Ramabhadra (SIL OFL), never synthetically bolded. */
+export const TE_HEAD = 'Ramabhadra_400Regular';
 
 const LATIN: FontPair = {
   headline: 'PlayfairDisplay_600SemiBold',
@@ -41,11 +41,10 @@ const LATIN: FontPair = {
 
 /** Font assets required for each language (in addition to Latin, which is always loaded). */
 export const languageFontAssets: Partial<Record<LangCode, Record<string, number>>> = {
-  // Telugu: Ramabhadra Bold (headlines, wordmark) + Ramabhadra Regular (story text)
-  // + Hind Guntur for small UI labels/buttons. All SIL Open Font License, free to embed in apps.
+  // Telugu: Ramabhadra (headlines, wordmark, story text) + Hind Guntur for small UI labels/buttons.
+  // All SIL Open Font License, free to embed in apps.
   te: {
     Ramabhadra_400Regular: require('@expo-google-fonts/ramabhadra/400Regular/Ramabhadra_400Regular.ttf'),
-    RamabhadraChatimpu_700Bold: require('../../assets/fonts/RamabhadraChatimpu-Bold.ttf'),
     HindGuntur_500Medium: require('@expo-google-fonts/hind-guntur/500Medium/HindGuntur_500Medium.ttf'),
     HindGuntur_600SemiBold: require('@expo-google-fonts/hind-guntur/600SemiBold/HindGuntur_600SemiBold.ttf'),
   },
@@ -91,8 +90,8 @@ const pair = (headline: string, body: string, semibold: string): FontPair => ({
 
 export const fontPairs: Record<LangCode, FontPair> = {
   en: LATIN,
-  // Headlines bold, story text regular (normal weight) — both Ramabhadra.
-  te: { headline: 'RamabhadraChatimpu_700Bold', headlineBold: 'RamabhadraChatimpu_700Bold', body: 'Ramabhadra_400Regular', bodyMedium: 'Ramabhadra_400Regular', bodySemibold: 'HindGuntur_600SemiBold' },
+  // Headlines and story text both in Ramabhadra's single (unbolded) weight; headlines are larger, not heavier.
+  te: { headline: 'Ramabhadra_400Regular', headlineBold: 'Ramabhadra_400Regular', body: 'Ramabhadra_400Regular', bodyMedium: 'Ramabhadra_400Regular', bodySemibold: 'HindGuntur_600SemiBold' },
   hi: pair('NotoSerifDevanagari_700Bold', 'NotoSansDevanagari_400Regular', 'NotoSansDevanagari_600SemiBold'),
   mr: pair('NotoSerifDevanagari_700Bold', 'NotoSansDevanagari_400Regular', 'NotoSansDevanagari_600SemiBold'),
   ta: pair('NotoSansTamil_700Bold', 'NotoSansTamil_400Regular', 'NotoSansTamil_700Bold'),
@@ -106,15 +105,15 @@ export const latinPair = LATIN;
 
 /** Indic scripts need extra line height so matras / conjuncts are not clipped. */
 export const lineHeightScale = (lang: LangCode, kind: 'headline' | 'body' | 'semibold' = 'body') =>
-  lang === 'en' ? 1 : lang === 'te' ? (kind === 'headline' ? 1.12 : kind === 'body' ? 1.1 : 1.36) : 1.32;
+  lang === 'en' ? 1 : lang === 'te' ? (kind === 'headline' ? 1.32 : kind === 'body' ? 1.26 : 1.36) : 1.32;
 
 /**
  * Optical size correction per script, relative to the Latin type scale.
- * Ramabhadra is a heavy, wide face → headlines set smaller; story text in Ramabhadra Regular is
- * slightly reduced too so a 60–80 word summary still fits a card, with generous line height.
+ * Telugu letters sit small inside their line, so Telugu text is set larger than English at the same
+ * variant (readable for older readers and low vision: story text ≥ 17 sp).
  */
 export function sizeScale(lang: LangCode, kind: 'headline' | 'body' | 'semibold') {
   if (lang === 'en') return 1;
-  if (lang === 'te') return kind === 'headline' ? 0.88 : kind === 'body' ? 0.92 : 0.96;
+  if (lang === 'te') return kind === 'headline' ? 1.04 : kind === 'body' ? 1.1 : 1.02;
   return kind === 'headline' ? 0.86 : 0.94;
 }
